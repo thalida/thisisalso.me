@@ -76,6 +76,10 @@
         .ql-snow .ql-toolbar button.ql-page-color:hover {
             opacity: 0.8;
         }
+
+        .ql-editor ul[data-checked="true"] li {
+          text-decoration: line-through;
+        }
     </style>
 </head>
 <body>
@@ -92,6 +96,11 @@
         var icons = Quill.import('ui/icons');
         var Delta = Quill.import('delta');
         var BlockEmbed = Quill.import('blots/block/embed');
+
+        class DividerBlot extends BlockEmbed { }
+        DividerBlot.blotName = 'divider';
+        DividerBlot.tagName = 'hr';
+        Quill.register(DividerBlot);
 
         icons.header[3] = `
         <svg width="17px" height="12px" viewBox="0 0 17 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -110,11 +119,6 @@
                 </g>
             </g>
         </svg>`;
-
-        class DividerBlot extends BlockEmbed { }
-        DividerBlot.blotName = 'divider';
-        DividerBlot.tagName = 'hr';
-        Quill.register(DividerBlot);
 
         var toolbarOptions = [
           [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }],
@@ -158,6 +162,12 @@
             $el.css({'background-color': bgColor});
         });
 
+        function getHTML(delta) { 
+            var tempQuill = new Quill(document.createElement("div"));
+            tempQuill.setContents(delta);
+            return tempQuill.root.innerHTML; 
+        }
+
         // Store accumulated changes
         var change = new Delta();
         quill.on('text-change', function(delta) {
@@ -167,21 +177,16 @@
         // Save periodically
         setInterval(function() {
           if (change.length() > 0) {
-            console.log('Saving changes', change);
-            /* 
-            Send partial changes
-            $.post('/your-endpoint', { 
-              partial: JSON.stringify(change) 
-            });
+            const html = getHTML(quill.getContents())
+            console.log('Saving changes', html);
             
-            Send entire document
-            $.post('/your-endpoint', { 
-              doc: JSON.stringify(quill.getContents())
+            $.post('/api/save', { 
+              html: JSON.stringify(html)
             });
-            */
+
             change = new Delta();
           }
-        }, 5*1000);
+        }, 1*1000);
 
         // Check for unsaved data
         window.onbeforeunload = function() {
