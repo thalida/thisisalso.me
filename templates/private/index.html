@@ -97,6 +97,10 @@
         var Delta = Quill.import('delta');
         var BlockEmbed = Quill.import('blots/block/embed');
 
+        // Store accumulated changes
+        var change = new Delta();
+        var selectedBgColor = null;
+
         class DividerBlot extends BlockEmbed { }
         DividerBlot.blotName = 'divider';
         DividerBlot.tagName = 'hr';
@@ -129,7 +133,7 @@
           [{ 'indent': '-1'}, { 'indent': '+1' }],
           [{ 'align': 'center' }, {'align': 'right'}],
           ['clean'],
-          [{'page-color': 'white'}, {'page-color': '#efefef'}, {'page-color': 'black'}, {'page-color': '#ffe4f0'}, {'page-color': '#beffe2'}, {'page-color': '#fff2ac'}],
+          [{'page-color': null}, {'page-color': '#efefef'}, {'page-color': 'black'}, {'page-color': '#ffe4f0'}, {'page-color': '#beffe2'}, {'page-color': '#fff2ac'}],
         ];
 
         var quill = new Quill('#quill-container', {
@@ -140,7 +144,14 @@
                 handlers: {
                     'page-color': function(bgColor) {
                         const textColor = (bgColor === 'black') ? 'white' : 'black';
-                        $('#scrolling-container').css({'background-color': bgColor, 'color': textColor});
+                        if (typeof bgColor === 'string') {
+                            $('#scrolling-container').css({'background-color': bgColor, 'color': textColor});
+                            selectedBgColor = bgColor;
+                        } else {
+                            $('#scrolling-container').css({'background-color': '', 'color': ''});
+                            selectedBgColor = null;
+                        }
+                        forceSave = true;
                     },
                     'divider': function() {
                         let range = this.quill.getSelection(true);
@@ -157,9 +168,8 @@
         });
 
         $('.ql-page-color').each(function(i, el) {
-            const $el = $(el);
-            const bgColor = $el.val();
-            $el.css({'background-color': bgColor});
+            var $el = $(el);
+            $el.css({'background-color': $el.val()});
         });
 
         function getHTML(delta) { 
@@ -168,20 +178,27 @@
             return tempQuill.root.innerHTML; 
         }
 
-        // Store accumulated changes
-        var change = new Delta();
         quill.on('text-change', function(delta) {
           change = change.compose(delta);
         });
 
         // Save periodically
         setInterval(function() {
-          if (change.length() > 0) {
+          if (change.length() > 0 || forceSave) {
+            forceSave = false;
             const html = getHTML(quill.getContents())
             console.log('Saving changes', html);
             
-            $.post('/api/save', { 
-              html: JSON.stringify(html)
+            $.ajax({
+                method: "POST",
+                url: "/api/post/save",
+                data: { 
+                    bg_color: selectedBgColor,
+                    html: JSON.stringify(html),
+                },
+            })
+            .done(function( msg ) {
+                console.log(msg)
             });
 
             change = new Delta();
