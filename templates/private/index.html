@@ -26,7 +26,7 @@
         }
         #quill-container .ql-editor {
           font-size: 16px;
-          overflow-y: visible; 
+          overflow-y: visible;
         }
 
         /* Specify our own scrolling container */
@@ -63,7 +63,7 @@
             display: flex;
         }
 
-        .ql-snow.ql-toolbar button.ql-page-color, 
+        .ql-snow.ql-toolbar button.ql-page-color,
         .ql-snow .ql-toolbar button.ql-page-color {
             margin: 5px;
             width: 20px;
@@ -72,7 +72,7 @@
             border: 1px solid rgba(0,0,0,0.2);
             cursor: pointer;
         }
-        .ql-snow.ql-toolbar button.ql-page-color:hover, 
+        .ql-snow.ql-toolbar button.ql-page-color:hover,
         .ql-snow .ql-toolbar button.ql-page-color:hover {
             opacity: 0.8;
         }
@@ -126,7 +126,7 @@
 
         var toolbarOptions = [
           [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }],
-          ['bold', 'italic', 'underline', 'strike', 'code'], 
+          ['bold', 'italic', 'underline', 'strike', 'code'],
           ['blockquote', 'code-block', 'divider'],
           ['link', 'image', 'video'],
           [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
@@ -162,7 +162,7 @@
                 },
             },
           },
-          scrollingContainer: '#scrolling-container', 
+          scrollingContainer: '#scrolling-container',
           placeholder: 'Type here...',
           theme: 'snow'
         });
@@ -172,10 +172,10 @@
             $el.css({'background-color': $el.val()});
         });
 
-        function getHTML(delta) { 
+        function getHTML(delta) {
             var tempQuill = new Quill(document.createElement("div"));
             tempQuill.setContents(delta);
-            return tempQuill.root.innerHTML; 
+            return tempQuill.root.innerHTML;
         }
 
         quill.on('text-change', function(delta) {
@@ -188,11 +188,11 @@
             forceSave = false;
             const html = getHTML(quill.getContents())
             console.log('Saving changes', html);
-            
+
             $.ajax({
                 method: "POST",
                 url: "/api/post/save",
-                data: { 
+                data: {
                     bg_color: selectedBgColor,
                     html: JSON.stringify(html),
                 },
