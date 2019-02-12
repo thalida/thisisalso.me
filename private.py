@@ -21,7 +21,8 @@ def index():
 @app.route('/api/collection/posts', methods=['GET'])
 def api_collection_list():
     try:
-        collection = posts_collection.fetch()
+        # collection = posts_collection.get_all_latest_versions()
+        collection = {}
         return make_response(jsonify(collection))
     except Exception:
         logger.exception('500 Error Getting all posts in a collection')
@@ -34,7 +35,7 @@ def api_post_upsert():
         post_id = api_json.get('id')
         post = posts_collection.get_or_create(post_id).save(api_json)
         posts_collection.store(post)
-        return make_response(jsonify(post.get_active_version().to_dict()))
+        return make_response(jsonify(post.latest_version.to_dict()))
     except Exception:
         logger.exception('500 Error Upserting Post')
         abort(500)
@@ -46,7 +47,7 @@ def api_post_delete():
         post_id = api_json.get('id')
         post = posts_collection.get_or_create(post_id).delete()
         posts_collection.store(post)
-        return make_response(jsonify(post.get_active_version().to_dict()))
+        return make_response(jsonify(post.latest_version.to_dict()))
     except Exception:
         logger.exception('500 Error Deleting Post')
         abort(500)
@@ -54,7 +55,6 @@ def api_post_delete():
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
-
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True

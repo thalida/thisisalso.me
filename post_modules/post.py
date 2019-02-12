@@ -18,21 +18,21 @@ class Post():
         super(Post, self).__init__()
         self.id = id
         self.version_collection = {}
-        self.active_version = None
+        self.latest_version = None
 
         if self.id is not None:
             self.fetch()
 
-    def get_active_version(self):
-        return self.active_version
+    def get_latest_version(self):
+        return self.latest_version
 
-    def set_active_version(self):
+    def set_latest_version(self):
         sorted_versions = sorted(self.version_collection.items(), key=itemgetter(0), reverse=True)
-        self.active_version = sorted_versions[0][1]
-        return self.active_version
+        self.latest_version = sorted_versions[0][1]
+        return self.latest_version
 
     def store(self, versions_json):
-        if type(versions_json) is not list:
+        if not isinstance(versions_json, (list, tuple,)):
             versions_json = [versions_json]
 
         if len(versions_json) == 0:
@@ -43,17 +43,17 @@ class Post():
             post_version = self.version_collection.get(versioned_date, PostVersion())
             self.version_collection[versioned_date] = post_version.set_all(item)
 
-        self.set_active_version()
+        self.set_latest_version()
         return self.version_collection
 
-    def should_version(self):
+    def should_save_version(self):
         try:
             now = datetime.datetime.now()
-            elapsed_time = now - self.active_version.get_last_modified_date()
+            elapsed_time = now - self.latest_version.get_last_modified_date()
             elapsed_min = int(elapsed_time.total_seconds() / 60)
             return elapsed_min > VERSION_AFTER_MINUTES
         except Exception:
-            logger.exception('Error getting should_version')
+            self.raise_error('Error figuring out if we need to version post {id}', id=self.id)
 
     def fetch(self):
         if self.id is None:
@@ -68,15 +68,15 @@ class Post():
                     self.store(cur.fetchall())
                     return self
         except Exception:
-            logger.exception('Post: Error fetching post by id: {id}'.format(id=self.id))
+            self.raise_error('Error fetching post with id: {id}', id=self.id)
 
     def save(self, api_json):
-        if self.active_version is not None:
-            new_version_obj = {**self.active_version.to_dict(), **api_json}
+        if self.latest_version is not None:
+            new_version_obj = {**self.latest_version.to_dict(), **api_json}
         else:
             new_version_obj = {**api_json}
 
-        is_new_version = False if self.id is None else self.should_version()
+        is_new_version = False if self.id is None else self.should_save_version()
         if self.id is None or is_new_version:
             return self.create(new_version_obj, is_new_version=is_new_version)
         else:
@@ -100,7 +100,7 @@ class Post():
                     self.store(cur.fetchone())
                     return self
         except Exception:
-            logger.exception('500 Error Creating Post')
+            self.raise_error('Error inserting a new post: {post}', post=new_version_obj)
 
     def update(self, new_version_obj):
         try:
@@ -110,13 +110,13 @@ class Post():
             with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
                 with conn.cursor(cursor_factory=RealDictCursor) as cur:
                     sql_string= "UPDATE post SET contents=%s, theme=%s, status=%s WHERE id=%s AND versioned_date=%s RETURNING *;"
-                    data = (contents, theme, status, self.id, self.active_version.get_versioned_date(),)
+                    data = (contents, theme, status, self.id, self.latest_version.get_versioned_date(),)
 
                     cur.execute(sql_string, data)
                     self.store(cur.fetchone())
                     return self
         except Exception:
-            logger.exception('500 Error Updating Post')
+            self.raise_error('Error updating a post: {post}', post=new_version_obj)
 
     def delete(self):
         try:
@@ -129,7 +129,7 @@ class Post():
                     self.store(cur.fetchone())
                     return self
         except Exception:
-            logger.exception('500 Error Updating Post')
+            self.raise_error('Error deleting a post: {id}', id=self.id)
 
     def raise_error(self, msg, **kwargs):
         msg = 'modules.post: bad things happended' if msg is None else msg

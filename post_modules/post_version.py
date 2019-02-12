@@ -20,8 +20,6 @@ class PostVersion():
         self.theme = None
         self.last_modified_date = None
 
-        # add to collection
-
     def to_dict(self):
         return {
             'id': self.id,
@@ -66,6 +64,7 @@ class PostVersion():
             )
 
         self.id = id
+        return self.id
 
     def set_status(self, status):
         if status not in STATUS_CODES.values():
@@ -75,18 +74,23 @@ class PostVersion():
             )
 
         self.status = status
+        return self.status
 
     def set_contents(self, contents):
         self.contents = contents
+        return self.contents
 
     def set_theme(self, theme):
         self.theme = theme
+        return self.theme
 
     def set_versioned_date(self, versioned_date):
         self.versioned_date = versioned_date
+        return self.versioned_date
 
     def set_last_modified_date(self, last_modified_date):
         self.last_modified_date = last_modified_date
+        return self.last_modified_date
 
     def raise_error(self, msg, **kwargs):
         msg = 'modules.post: bad things happended' if msg is None else msg
