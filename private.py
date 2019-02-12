@@ -14,9 +14,29 @@ logger = logging.getLogger(__name__)
 db = psycopg2.connect("dbname=thisisalsome user=thalida")
 app = Flask(__name__)
 
+# views
+# - list of all posts (index)
+# - view post (scrollable like public view, admin only @edit_button)
+#     @edit_button => edit post view
+# - create post
+#     triggers an edit post view
+# - edit post
+#     1 post at a time
+#     quill js magic
+
+
 @app.route('/')
-def index():
-    return render_template('private/index.html')
+def list():
+    return render_template('private/views/list.html')
+
+@app.route('/read/{id}')
+def read():
+    return render_template('private/views/read.html')
+
+@app.route('/edit/{id}')
+def edit():
+    return render_template('private/views/edit.html')
+
 
 @app.route('/api/collection/posts', methods=['GET'])
 def api_collection_list():
