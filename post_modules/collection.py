@@ -59,7 +59,7 @@ class PostsCollection():
 
     @staticmethod
     def raise_error(msg, **kwargs):
-        msg = 'modules.posts_collection: bad things happended' if msg is None else msg
+        msg = 'spomething bad happended' if msg is None else msg
         msg = msg.format(**kwargs)
         logger.exception(msg)
         raise Exception(msg)

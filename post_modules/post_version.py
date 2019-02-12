@@ -58,7 +58,7 @@ class PostVersion():
     def set_id(self, id):
         if self.id is not None and id != self.id:
             self.raise_error(
-                'Post: Somehow fetched db post id {db_id} from post Class id {class_id}',
+                "Somehow fetched post db id {db_id} from post class id {class_id}",
                 db_id=db_json.get('id'),
                 class_id=self.id
             )
