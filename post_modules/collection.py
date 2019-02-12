@@ -6,7 +6,7 @@ from collections import defaultdict
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from post_modules import STATUS_CODES
+from post_modules import STATUS_CODES, psql
 from post_modules.post import Post
 
 logger = logging.getLogger(__name__)
@@ -31,16 +31,14 @@ class PostsCollection():
 
     def fetch(self):
         try:
-            with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    sql_string = "SELECT id FROM post WHERE status!=%s GROUP BY id;"
-                    data = (STATUS_CODES['DELETED'],)
-
-                    cur.execute(sql_string, data)
-                    posts = cur.fetchall()
-                    for post in posts:
-                        self.get_or_create(post['id'], store_on_create=True)
-                    return self
+            posts = psql.execute(
+                'fetchall',
+                "SELECT id FROM post WHERE status!=%s GROUP BY id;",
+                (STATUS_CODES['DELETED'],)
+            )
+            for post in posts:
+                self.get_or_create(post['id'], store_on_create=True)
+            return self
         except Exception:
             logger.exception('Post: Error fetching all posts in collection')
 

@@ -7,7 +7,7 @@ import datetime
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from post_modules import VERSION_AFTER_MINUTES, STATUS_CODES
+from post_modules import VERSION_AFTER_MINUTES, STATUS_CODES, psql
 from post_modules.post_version import PostVersion
 
 logger = logging.getLogger(__name__)
@@ -60,13 +60,9 @@ class Post():
             self.raise_error('Attempting to fetch a post with no id')
 
         try:
-            with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    sql_string = "SELECT * FROM post WHERE id=%s;"
-                    data = (self.id,)
-                    cur.execute(sql_string, data)
-                    self.store(cur.fetchall())
-                    return self
+            res = psql.execute('fetchall', "SELECT * FROM post WHERE id=%s;", (self.id,))
+            self.store(res)
+            return self
         except Exception:
             self.raise_error('Error fetching post with id: {id}', id=self.id)
 
@@ -87,18 +83,17 @@ class Post():
             contents = new_version_obj.get('contents', '')
             theme = new_version_obj.get('theme', None)
             status = new_version_obj.get('status', STATUS_CODES['ENABLED'])
-            with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    if is_new_version:
-                        sql_string = "INSERT INTO post (id, contents, theme, status) VALUES (%s, %s, %s, %s) RETURNING *;"
-                        data = (self.id, contents, theme, status,)
-                    else:
-                        sql_string= "INSERT INTO post (contents, theme, status) VALUES (%s, %s, %s) RETURNING *;"
-                        data = (contents, theme, status,)
 
-                    cur.execute(sql_string, data)
-                    self.store(cur.fetchone())
-                    return self
+            if is_new_version:
+                query = "INSERT INTO post (id, contents, theme, status) VALUES (%s, %s, %s, %s) RETURNING *;"
+                query_args = (self.id, contents, theme, status,)
+            else:
+                query= "INSERT INTO post (contents, theme, status) VALUES (%s, %s, %s) RETURNING *;"
+                query_args = (contents, theme, status,)
+
+            res = psql.execute('fetchone', query, query_args)
+            self.store(res)
+            return self
         except Exception:
             self.raise_error('Error inserting a new post: {post}', post=new_version_obj)
 
@@ -107,27 +102,22 @@ class Post():
             contents = new_version_obj.get('contents', '')
             theme = new_version_obj.get('theme', None)
             status = new_version_obj.get('status')
-            with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    sql_string= "UPDATE post SET contents=%s, theme=%s, status=%s WHERE id=%s AND versioned_date=%s RETURNING *;"
-                    data = (contents, theme, status, self.id, self.latest_version.get_versioned_date(),)
 
-                    cur.execute(sql_string, data)
-                    self.store(cur.fetchone())
-                    return self
+            query = "UPDATE post SET contents=%s, theme=%s, status=%s WHERE id=%s AND versioned_date=%s RETURNING *;"
+            query_args = (contents, theme, status, self.id, self.latest_version.get_versioned_date(),)
+
+            res = psql.execute('fetchone', query, query_args)
+            self.store(res)
+            return self
         except Exception:
             self.raise_error('Error updating a post: {post}', post=new_version_obj)
 
     def delete(self):
         try:
-            with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
-                with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                    sql_string= "UPDATE post SET status=%s WHERE id=%s RETURNING *;"
-                    data = (STATUS_CODES['DELETED'], self.id,)
-
-                    cur.execute(sql_string, data)
-                    self.store(cur.fetchone())
-                    return self
+            query = "UPDATE post SET status=%s WHERE id=%s RETURNING *;"
+            query_args = (STATUS_CODES['DELETED'], self.id,)
+            res = psql.execute('fetchone', query, query_args)
+            self.store(res)
         except Exception:
             self.raise_error('Error deleting a post: {id}', id=self.id)
 
