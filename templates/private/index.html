@@ -63,8 +63,8 @@
             display: flex;
         }
 
-        .ql-snow.ql-toolbar button.ql-page-color,
-        .ql-snow .ql-toolbar button.ql-page-color {
+        .ql-snow.ql-toolbar button.ql-post-theme,
+        .ql-snow .ql-toolbar button.ql-post-theme {
             margin: 5px;
             width: 20px;
             height: 20px;
@@ -72,8 +72,8 @@
             border: 1px solid rgba(0,0,0,0.2);
             cursor: pointer;
         }
-        .ql-snow.ql-toolbar button.ql-page-color:hover,
-        .ql-snow .ql-toolbar button.ql-page-color:hover {
+        .ql-snow.ql-toolbar button.ql-post-theme:hover,
+        .ql-snow .ql-toolbar button.ql-post-theme:hover {
             opacity: 0.8;
         }
 
@@ -96,10 +96,14 @@
         var icons = Quill.import('ui/icons');
         var Delta = Quill.import('delta');
         var BlockEmbed = Quill.import('blots/block/embed');
+        var forceSave = false;
 
         // Store accumulated changes
         var change = new Delta();
-        var selectedBgColor = null;
+        var selectedTheme = null;
+        var post = {
+            id: null,
+        }
 
         class DividerBlot extends BlockEmbed { }
         DividerBlot.blotName = 'divider';
@@ -133,7 +137,7 @@
           [{ 'indent': '-1'}, { 'indent': '+1' }],
           [{ 'align': 'center' }, {'align': 'right'}],
           ['clean'],
-          [{'page-color': null}, {'page-color': '#efefef'}, {'page-color': 'black'}, {'page-color': '#ffe4f0'}, {'page-color': '#beffe2'}, {'page-color': '#fff2ac'}],
+          [{'post-theme': null}, {'post-theme': '#efefef'}, {'post-theme': 'black'}, {'post-theme': '#ffe4f0'}, {'post-theme': '#beffe2'}, {'post-theme': '#fff2ac'}],
         ];
 
         var quill = new Quill('#quill-container', {
@@ -142,14 +146,14 @@
             toolbar: {
                 container: toolbarOptions,
                 handlers: {
-                    'page-color': function(bgColor) {
-                        const textColor = (bgColor === 'black') ? 'white' : 'black';
-                        if (typeof bgColor === 'string') {
-                            $('#scrolling-container').css({'background-color': bgColor, 'color': textColor});
-                            selectedBgColor = bgColor;
+                    'post-theme': function(theme) {
+                        const textColor = (theme === 'black') ? 'white' : 'black';
+                        if (typeof theme === 'string') {
+                            $('#scrolling-container').css({'background-color': theme, 'color': textColor});
+                            selectedTheme = theme;
                         } else {
                             $('#scrolling-container').css({'background-color': '', 'color': ''});
-                            selectedBgColor = null;
+                            selectedTheme = null;
                         }
                         forceSave = true;
                     },
@@ -167,7 +171,7 @@
           theme: 'snow'
         });
 
-        $('.ql-page-color').each(function(i, el) {
+        $('.ql-post-theme').each(function(i, el) {
             var $el = $(el);
             $el.css({'background-color': $el.val()});
         });
@@ -191,19 +195,22 @@
 
             $.ajax({
                 method: "POST",
-                url: "/api/post/save",
-                data: {
-                    bg_color: selectedBgColor,
-                    html: JSON.stringify(html),
-                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/api/post/upsert",
+                data: JSON.stringify({
+                    id: post.id,
+                    theme: selectedTheme,
+                    contents: JSON.stringify(html),
+                }),
             })
-            .done(function( msg ) {
-                console.log(msg)
+            .done(function( res ) {
+                post = res
             });
 
             change = new Delta();
           }
-        }, 1*1000);
+        }, 3*1000);
 
         // Check for unsaved data
         window.onbeforeunload = function() {
