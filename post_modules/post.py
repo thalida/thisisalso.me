@@ -1,7 +1,7 @@
 import logging
 from pprint import pprint
-from operator import itemgetter
 
+from operator import itemgetter
 import datetime
 
 import psycopg2
@@ -93,6 +93,8 @@ class Post():
             theme = new_version_obj.get('theme', None)
             status = new_version_obj.get('status', STATUS_CODES['ENABLED'])
             is_first_version = self.id is None
+
+            print(new_version_obj)
 
             if is_first_version:
                 query = """

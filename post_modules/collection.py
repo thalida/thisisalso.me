@@ -11,10 +11,10 @@ from post_modules.post import Post
 
 logger = logging.getLogger(__name__)
 
-class PostsCollection():
-    """docstring for PostsCollection"""
+class Collection():
+    """docstring for Collection"""
     def __init__(self):
-        super(PostsCollection, self).__init__()
+        super(Collection, self).__init__()
         self.__collection = defaultdict()
         self.fetch()
 
@@ -64,8 +64,10 @@ class PostsCollection():
         logger.exception(msg)
         raise Exception(msg)
 
-    # def get_all_latest_versions(self):
-    #     return {post.id: post.latest_version.to_dict() for k, post in self.__collection.items()}
+    def get_all_latest_post_versions(self):
+        dict = {post.id: post.latest_version.to_dict() for k, post in self.__collection.items()}
+        pprint(dict)
+        return dict
 
     # def get_latest_version_for_post(self, id):
     #     post = self.find(id)
@@ -81,5 +83,5 @@ class PostsCollection():
     #         for k, post_version in post.version_collection.items()
     #     } if post is not None else None
 
-posts_collection = PostsCollection()
+collection = Collection()
 

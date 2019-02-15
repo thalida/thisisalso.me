@@ -1,6 +1,7 @@
 import logging
 from pprint import pprint
 
+from flask import Markup
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
