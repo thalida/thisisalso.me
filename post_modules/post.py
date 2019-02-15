@@ -92,11 +92,8 @@ class Post():
             contents = new_version_obj.get('contents', '')
             theme = new_version_obj.get('theme', None)
             status = new_version_obj.get('status', STATUS_CODES['ENABLED'])
-            is_first_version = self.id is None
 
-            print(new_version_obj)
-
-            if is_first_version:
+            if self.id is None:
                 query = """
                         INSERT INTO post (contents, theme, status)
                         VALUES (%s, %s, %s) RETURNING *;

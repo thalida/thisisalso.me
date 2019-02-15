@@ -11,14 +11,12 @@
   <ol class="posts">
     {% for post_id, post in posts.items() %}
     <li class="post">
-      {{post_id}}
       {{post['contents']|safe}}
     </li>
     {% endfor %}
   </ol>
-    {{posts}}
-    {{posts | tojson}}
   <script type="text/javascript">
+    const posts = {{posts | tojson}};
   </script>
   <script src="{{url_for('static', filename='base.js')}}" type="text/javascript" />
 </body>

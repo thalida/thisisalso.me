@@ -66,7 +66,6 @@ class Collection():
 
     def get_all_latest_post_versions(self):
         dict = {post.id: post.latest_version.to_dict() for k, post in self.__collection.items()}
-        pprint(dict)
         return dict
 
     # def get_latest_version_for_post(self, id):
