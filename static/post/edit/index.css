@@ -1,21 +1,12 @@
 
-html {
-  height: 100%;
-}
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
 #quill-container {
-  height: auto;
   min-height: calc(100% - 45px);
   padding: 0px;
 }
 #quill-container .ql-editor {
   font-size: 16px;
   overflow-y: visible;
+  min-height: 100%;
 }
 
 /* Specify our own scrolling container */
@@ -36,7 +27,7 @@ body {
   left: 0;
   width: 100%;
   background: #ffffff;
-  height: 45px;
+  height: 50px;
 }
 
 .ql-toolbar.ql-snow {

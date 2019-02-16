@@ -42,8 +42,21 @@ class Collection():
         except Exception:
             logger.exception('Post: Error fetching all posts in collection')
 
-    def find(self, id):
+    def get_post(self, id):
         return self.__collection.get(id, None)
+
+    def get_all_latest_post_versions(self):
+        dict = {post.id: post.latest_version.to_dict() for k, post in self.__collection.items()}
+        return dict
+
+    def get_post_lastest_version(self, id):
+        post = self.get_post(id)
+        return post.latest_version.to_dict()
+
+    def get_post_versions(self, id):
+        post = self.get_post(id)
+        versions = {k: version.to_dict() for k, version in post.versions.items()}
+        return versions
 
     def get_or_create(self, id, store_on_create=False):
         post = self.__collection.get(id, Post(id))
@@ -63,10 +76,6 @@ class Collection():
         msg = msg.format(**kwargs)
         logger.exception(msg)
         raise Exception(msg)
-
-    def get_all_latest_post_versions(self):
-        dict = {post.id: post.latest_version.to_dict() for k, post in self.__collection.items()}
-        return dict
 
     # def get_latest_version_for_post(self, id):
     #     post = self.find(id)

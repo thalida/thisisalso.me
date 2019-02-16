@@ -2,13 +2,11 @@ var icons = Quill.import('ui/icons');
 var Delta = Quill.import('delta');
 var BlockEmbed = Quill.import('blots/block/embed');
 var forceSave = false;
+var isSaving = false;
 
 // Store accumulated changes
 var change = new Delta();
 var selectedTheme = null;
-var post = {
-    id: null,
-}
 
 class DividerBlot extends BlockEmbed { }
 DividerBlot.blotName = 'divider';
@@ -87,26 +85,28 @@ quill.on('text-change', function(delta) {
 
 // Save periodically
 setInterval(function() {
-  if (change.length() > 0 || forceSave) {
-    forceSave = false;
-    const html = getHTML(quill.getContents())
-    $.ajax({
-        method: "POST",
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        url: "/api/post/upsert",
-        data: JSON.stringify({
-            id: post.id,
-            theme: selectedTheme,
-            contents: html,
-        }),
-    })
-    .done(function( res ) {
-        post = res
-    });
+    if (!isSaving && (change.length() > 0 || forceSave)) {
+        isSaving = true;
 
-    change = new Delta();
-  }
+        $.ajax({
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "/api/post/upsert",
+            data: JSON.stringify({
+                id: post.id,
+                theme: selectedTheme,
+                contents: getHTML(quill.getContents()),
+            }),
+        })
+        .done(function( res ) {
+            post = res;
+            isSaving = false;
+            forceSave = false;
+        });
+
+        change = new Delta();
+    }
 }, 3*1000);
 
 // Check for unsaved data

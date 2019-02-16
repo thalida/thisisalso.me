@@ -1,0 +1,41 @@
+body {
+    padding: 5%;
+}
+
+.posts {
+    list-style: none;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.post {
+    display: block;
+    height: 45vh;
+    overflow: hidden;
+}
+
+#post[data-theme="1"] {
+    background-color: #efefef;
+}
+
+#post[data-theme="2"] {
+    background-color: #000;
+    color: #fff;
+}
+
+#post[data-theme="3"] {
+    background-color: #ffe4f0;
+}
+
+#post[data-theme="4"] {
+    background-color: #beffe2;
+}
+
+#post[data-theme="5"] {
+    background-color: #fff2ac;
+}

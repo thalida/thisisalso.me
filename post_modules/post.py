@@ -34,17 +34,20 @@ class Post():
         self.latest_version = sorted_versions[0][1]
         return self.latest_version
 
-    def store(self, versions_json):
-        if not isinstance(versions_json, (list, tuple,)):
-            versions_json = [versions_json]
+    def store(self, sql_res):
+        if not isinstance(sql_res, (list, tuple,)):
+            sql_res = [sql_res]
 
-        if len(versions_json) == 0:
+        if len(sql_res) == 0:
             return []
 
-        for item in versions_json:
-            versioned_date = item['versioned_date']
+        if self.id is None:
+            self.id = sql_res[0]['id']
+
+        for post in sql_res:
+            versioned_date = post['versioned_date']
             post_version = self.versions.get(versioned_date, PostVersion())
-            self.versions[versioned_date] = post_version.set_all(item)
+            self.versions[versioned_date] = post_version.set_all(post)
 
         self.set_latest_version()
         return self.versions

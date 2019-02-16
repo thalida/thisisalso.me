@@ -4,19 +4,15 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1, width=device-width">
+
     <link href="{{url_for('static', filename='base.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='list.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='post/versions/index.css')}}" rel="stylesheet">
 </head>
 <body>
     <ol class="posts">
+        {% for version_id, post in versions.items() %}
         <li>
-            <a class="post" href="/post/new">
-                Create a new post
-            </a>
-        </li>
-        {% for post_id, post in posts.items() %}
-        <li>
-            <a class="post" href="/post/{{post_id}}" data-theme="{{post['theme']}}">
+            <a class="post" href="/post/{{post.id}}" data-theme="{{post['theme']}}">
                 {{post['contents']|safe}}
             </a>
         </li>
