@@ -1,0 +1,19 @@
+body {
+    padding: 2%;
+}
+
+ol.posts {
+    list-style: none;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+li.post {
+    height: 45vh;
+    overflow: hidden;
+}

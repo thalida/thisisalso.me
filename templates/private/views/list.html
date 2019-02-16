@@ -6,18 +6,20 @@
     <meta name="viewport" content="initial-scale=1, width=device-width">
     <style></style>
     <link href="{{url_for('static', filename='base.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='list/index.css')}}" rel="stylesheet">
 </head>
 <body>
-  <ol class="posts">
-    {% for post_id, post in posts.items() %}
-    <li class="post">
-      {{post['contents']|safe}}
-    </li>
-    {% endfor %}
-  </ol>
-  <script type="text/javascript">
-    const posts = {{posts | tojson}};
-  </script>
-  <script src="{{url_for('static', filename='base.js')}}" type="text/javascript" />
+    <ol class="posts">
+        {% for post_id, post in posts.items() %}
+        <li class="post">
+            {{post['contents']|safe}}
+        </li>
+        {% endfor %}
+    </ol>
+    <script type="text/javascript">
+        const posts = {{posts | tojson}};
+    </script>
+    <script src="{{url_for('static', filename='base.js')}}" type="text/javascript"></script>
+    <script src="{{url_for('static', filename='list/index.js')}}" type="text/javascript"></script>
 </body>
 </html>
