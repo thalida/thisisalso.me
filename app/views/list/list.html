@@ -12,10 +12,10 @@
 
 {% block body %}
 <ol class="posts">
-    {% for post_id, post in posts.items() %}
+    {% for post in posts %}
     <li>
         <div class="ql-container ql-snow ql-container--card"
-             href="/{{post_id}}"
+             href="/{{post['id']}}"
              role="link"
              data-theme="{{post['theme']}}"
              tabindex="0">

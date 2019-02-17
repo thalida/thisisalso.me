@@ -8,7 +8,7 @@ from flask import Blueprint, render_template, make_response, abort
 from bs4 import BeautifulSoup
 
 from app import AMDIN_ENV_KEY
-from app.post.collection import collection
+from app.models import postModels
 
 logger = logging.getLogger(__name__)
 shared_routes = Blueprint(
@@ -21,14 +21,10 @@ shared_routes = Blueprint(
 @shared_routes.route('/')
 def view_index():
     try:
-        posts = collection.get_all_latest_post_versions()
-        sorted_posts = sorted(posts.items(),
-                                key=lambda p: p[1]['last_modified_date'],
-                                reverse=True)
-        sorted_posts_dict = {x: y for x, y in sorted_posts}
+        posts = postModels.fetch_all()
         return render_template('list/list.html',
                                 is_admin=os.getenv(AMDIN_ENV_KEY, False),
-                                posts=sorted_posts_dict)
+                                posts=posts)
     except Exception:
         logger.exception('')
         abort(404)
@@ -36,7 +32,11 @@ def view_index():
 @shared_routes.route('/<int:post_id>')
 def view_read(post_id):
     try:
-        post = collection.get_post_lastest_version(post_id)
+        post = postModels.fetch_one(post_id)
+
+        if post is None:
+            abort(404)
+
         return render_template('read/read.html',
                                 is_admin=os.getenv(AMDIN_ENV_KEY, False),
                                 post_id=post_id,

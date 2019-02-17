@@ -13,6 +13,8 @@ html, body {
 body {
     margin: 0;
     padding: 0;
+    /*font: normal 16px/1.4 'PT Sans', sans-serif;*/
+    font: normal 16px/1.4 'Muli', sans-serif;
 }
 
 header {
@@ -20,23 +22,32 @@ header {
 }
 
 .posts {
+    background-color: #f8ffff;
     list-style: none;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 2%;
+    grid-gap: 5%;
     margin: 0;
-    padding: 4%;
+    padding: 5%;
     height: 100%;
 }
 
 .ql-container--card {
-    height: 360px;
+    height: 480px;
     overflow: hidden;
     cursor: pointer;
-}
+
+    padding: 5%;
+/*    border-radius: 10px;
+    box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.1);
+*/}
 
 .ql-container--card .ql-editor > * {
     cursor: pointer;
+}
+
+.ql-container--card .ql-editor {
+
 }
 
 .ql-container--card .ql-editor:after {
@@ -63,33 +74,55 @@ header {
     height: auto;
 }
 
+/* White/Default */
+*[data-theme="None"],
+*[data-theme="None"] .ql-editor:after,
+.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] {
+    background-color: #fff;
+    color: #555;
+}
+
+*[data-theme="None"],
+.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] {
+    border: 1px solid #ddd;
+}
+
+/* Gray */
 *[data-theme="1"],
 *[data-theme="1"] .ql-editor:after,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="1"] {
     background-color: #efefef;
+    color: #333;
 }
 
+/* Black */
 *[data-theme="2"],
 *[data-theme="2"] .ql-editor:after,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="2"] {
     background-color: #000;
-    color: #fff;
+    color: #ddd;
 }
 
+/* Pink */
 *[data-theme="3"],
 *[data-theme="3"] .ql-editor:after,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="3"] {
     background-color: #ffe4f0;
+    color: #84003a;
 }
 
+/* Teal */
 *[data-theme="4"],
 *[data-theme="4"] .ql-editor:after,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="4"] {
     background-color: #beffe2;
+    color: #00381f;
 }
 
+/* Yello w*/
 *[data-theme="5"],
 *[data-theme="5"] .ql-editor:after,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="5"] {
     background-color: #fff2ac;
+    color: #8e2a00;
 }
