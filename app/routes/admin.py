@@ -15,7 +15,7 @@ admin_routes = Blueprint(
 
 @admin_routes.route('/new')
 @admin_routes.route('/<int:post_id>/edit')
-def view__post_edit(post_id=None):
+def view_edit(post_id=None):
     try:
         post = collection.get_post_lastest_version(post_id) if post_id is not None else None
         return render_template('edit/edit.html', post_id=post_id, post=post)
@@ -24,7 +24,7 @@ def view__post_edit(post_id=None):
         abort(404)
 
 @admin_routes.route('/api/post/upsert', methods=['POST'])
-def api__post_upsert():
+def api_post_upsert():
     try:
         api_json = request.get_json()
         post_id = api_json.get('id')
@@ -36,7 +36,7 @@ def api__post_upsert():
         abort(500)
 
 @admin_routes.route('/api/post/delete', methods=['POST'])
-def api__post_delete():
+def api_post_delete():
     try:
         api_json = request.get_json()
         post_id = api_json.get('id')

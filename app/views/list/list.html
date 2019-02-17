@@ -4,21 +4,21 @@
 <script src="{{url_for('static', filename='list/list.js')}}" type="text/javascript"></script>
 {% endblock %}
 
+{% block nav_links %}
+{% if is_admin %}
+<a href="/new">write</a>
+{% endif %}
+{% endblock %}
+
 {% block body %}
 <ol class="posts">
-    <li>
-        <div class="ql-container ql-snow ql-container--card"
-            href="/new"
-            role="link">
-            Create a new post
-        </div>
-    </li>
     {% for post_id, post in posts.items() %}
     <li>
         <div class="ql-container ql-snow ql-container--card"
              href="/{{post_id}}"
              role="link"
-             data-theme="{{post['theme']}}">
+             data-theme="{{post['theme']}}"
+             tabindex="0">
             <div class="ql-editor">
                 {{post['contents']|html_excerpt(345)|safe}}
             </div>
