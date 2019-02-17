@@ -5,7 +5,6 @@ import re
 import logging
 from pprint import pprint
 
-import psycopg2
 from flask import Flask, request, render_template, make_response, jsonify, abort, Markup
 from bs4 import BeautifulSoup
 
@@ -13,7 +12,6 @@ from post_modules.post import Post
 from post_modules.collection import collection
 
 logger = logging.getLogger(__name__)
-db = psycopg2.connect("dbname=thisisalsome user=thalida")
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
