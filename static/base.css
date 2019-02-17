@@ -14,3 +14,19 @@ body {
     margin: 0;
     padding: 0;
 }
+
+.ql-container {
+  min-height: calc(100% - 45px);
+  padding: 0px;
+}
+
+.ql-editor {
+  overflow-y: visible;
+  min-height: 100%;
+  padding: 4%;
+  white-space: normal;
+}
+
+.ql-container.ql-snow {
+  border: 0;
+}

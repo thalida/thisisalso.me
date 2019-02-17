@@ -6,7 +6,7 @@ body {
     list-style: none;
 
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 2%;
     margin: 0;
     padding: 0;
@@ -17,6 +17,15 @@ body {
     display: block;
     height: 45vh;
     overflow: hidden;
+}
+
+.post img {
+    width: 100%;
+}
+
+.post:hover {
+    opacity: 0.7;
+    cursor: pointer;
 }
 
 .post[data-theme="1"] {

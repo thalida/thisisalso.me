@@ -13,7 +13,7 @@
     <link href="{{url_for('static', filename='post/edit/index.css')}}" rel="stylesheet">
 <body>
     <div id="scrolling-container" {% if post %}data-theme="{{post['theme']}}"{% endif %}>
-        <div id="quill-container">
+        <div data-quill-container>
         {% if post %}
             {{post['contents']|safe}}
         {% endif %}

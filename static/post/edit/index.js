@@ -43,7 +43,7 @@ var toolbarOptions = [
   [{'post-theme': null}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}],
 ];
 
-var quill = new Quill('#quill-container', {
+var quill = new Quill('[data-quill-container]', {
   modules: {
     clipboard: true,
     toolbar: {

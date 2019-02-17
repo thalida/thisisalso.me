@@ -16,11 +16,18 @@
         </li>
         {% for post_id, post in posts.items() %}
         <li>
-            <a class="post" href="/post/{{post_id}}" data-theme="{{post['theme']}}">
-                {{post['contents']|safe}}
-            </a>
+            <div
+                class="post"
+                href="/post/{{post_id}}"
+                role="link"
+                data-theme="{{post['theme']}}">
+                {{post['contents']|html_excerpt(230)|safe}}
+            </div>
         </li>
         {% endfor %}
     </ol>
+
+    <script
+        src="{{url_for('static', filename='list.js')}}" type="text/javascript"></script>
 </body>
 </html>
