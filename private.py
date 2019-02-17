@@ -38,7 +38,7 @@ def html_excerpt(html, num_characters=100, append_string="…"):
 app.jinja_env.filters['html_excerpt'] = html_excerpt
 
 @app.route('/')
-def view_list():
+def view__index():
     posts = collection.get_all_latest_post_versions()
     sorted_posts = sorted(posts.items(),
                             key=lambda p: p[1]['last_modified_date'],
@@ -46,28 +46,23 @@ def view_list():
     sorted_posts_dict = {x: y for x, y in sorted_posts}
     return render_template('private/views/list.html', posts=sorted_posts_dict)
 
-@app.route('/post/new')
-def view_post_new():
-    return render_template('private/views/post/edit.html')
-
-@app.route('/post/<int:post_id>')
-def view_post_view(post_id):
+@app.route('/<int:post_id>')
+def view__post_read(post_id):
     post = collection.get_post_lastest_version(post_id)
-    return render_template('private/views/post/view.html', post_id=post_id, post=post)
+    return render_template('private/views/read.html', post_id=post_id, post=post)
 
-@app.route('/post/<int:post_id>/versions')
-def view_post_versions(post_id):
-    versions = collection.get_post_versions(post_id)
-    return render_template('private/views/post/versions.html', post_id=post_id, versions=versions)
-
-@app.route('/post/<int:post_id>/edit')
-def view_post_edit(post_id):
+@app.route('/<int:post_id>/edit')
+def view__post_edit(post_id):
     post = collection.get_post_lastest_version(post_id)
-    return render_template('private/views/post/edit.html', post_id=post_id, post=post)
+    return render_template('private/views/edit.html', post_id=post_id, post=post)
+
+@app.route('/new')
+def view__post_new():
+    return render_template('private/views/edit.html')
 
 
 @app.route('/api/collection/posts', methods=['GET'])
-def api_collection_list():
+def api__collection_list():
     try:
         # collection = collection.get_all_latest_versions()
         collection = {}
@@ -77,7 +72,7 @@ def api_collection_list():
         abort(500)
 
 @app.route('/api/post/upsert', methods=['POST'])
-def api_post_upsert():
+def api__post_upsert():
     try:
         api_json = request.get_json()
         post_id = api_json.get('id')
@@ -90,7 +85,7 @@ def api_post_upsert():
         abort(500)
 
 @app.route('/api/post/delete', methods=['POST'])
-def api_post_delete():
+def api__post_delete():
     try:
         api_json = request.get_json()
         post_id = api_json.get('id')

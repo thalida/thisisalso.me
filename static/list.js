@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
     const KEYCODES = { ENTER:13 };
-    let posts = document.querySelectorAll('.post');
+    let posts = document.querySelectorAll('.ql-container');
 
     for (var i = 0; i < posts.length; i+=1) {
         post = posts[i];

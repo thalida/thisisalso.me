@@ -51,7 +51,7 @@ var quill = new Quill('[data-quill-container]', {
         handlers: {
             'post-theme': function(themeId) {
                 selectedTheme = themeId
-                $('#scrolling-container').attr('data-theme', selectedTheme);
+                $('[data-quill-container]').attr('data-theme', selectedTheme);
                 forceSave = true;
             },
             'divider': function() {
@@ -63,7 +63,7 @@ var quill = new Quill('[data-quill-container]', {
         },
     },
   },
-  scrollingContainer: '#scrolling-container',
+  scrollingContainer: '[data-quill-container]',
   placeholder: 'Type here...',
   theme: 'snow'
 });
