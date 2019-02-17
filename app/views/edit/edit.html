@@ -17,6 +17,10 @@ Edit #{{post.id}}
 <script src="{{url_for('static', filename='edit/edit.js')}}" type="text/javascript"></script>
 {% endblock %}
 
+{% block nav_links %}
+<a href="/new">write</a>
+{% endblock %}
+
 {% block body %}
 <div class="ql-container--with-toolbar"
      data-quill-container

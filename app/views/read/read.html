@@ -13,6 +13,12 @@
 {% endif %}
 {% endblock %}
 
+{% block nav_links %}
+{% if is_admin %}
+<a href="/new">write</a>
+{% endif %}
+{% endblock %}
+
 {% block body %}
 <div class="ql-container ql-snow ql-container--full" data-theme="{{post['theme']}}">
     <div id="post" class="ql-editor">
