@@ -1,5 +1,9 @@
 import logging
-from app import STATUS_CODES, psql
+
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+from app import STATUS_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -8,6 +12,15 @@ class PostModels(object):
     def __init__(self, is_admin=False):
         super(PostModels, self).__init__()
         self.is_admin = is_admin
+
+    def execute(self, fetch_action, query, query_args):
+        with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(query, query_args)
+                fetch_fn = getattr(cur, fetch_action)
+                response = fetch_fn()
+
+        return response
 
     def is_new_version(self, id=None, latest_version=None):
         if id is None or latest_version is None:
@@ -24,7 +37,7 @@ class PostModels(object):
 
     def fetch_all(self):
         try:
-            posts = psql.execute(
+            posts = self.execute(
                 'fetchall',
                 """
                 SELECT *
@@ -48,7 +61,7 @@ class PostModels(object):
 
     def fetch_one(self, id):
         try:
-            post = psql.execute(
+            post = self.execute(
                 'fetchone',
                 """
                 SELECT *
@@ -102,7 +115,7 @@ class PostModels(object):
                         """
                 query_args = (id, contents, theme, status,)
 
-            post = psql.execute('fetchone', query, query_args)
+            post = self.execute('fetchone', query, query_args)
             return post
         except Exception:
             self.raise_error('Error inserting a new post: {post}',
@@ -123,7 +136,7 @@ class PostModels(object):
                     """
             query_args = (contents, theme, status, id, versioned_date,)
 
-            post = psql.execute('fetchone', query, query_args)
+            post = self.execute('fetchone', query, query_args)
             return post
         except Exception:
             self.raise_error('Error updating a post: {post}',
@@ -133,7 +146,7 @@ class PostModels(object):
         try:
             query = "UPDATE post SET status=%s WHERE id=%s RETURNING *"
             query_args = (STATUS_CODES['DELETED'], id,)
-            post = psql.execute('fetchone', query, query_args)
+            post = self.execute('fetchone', query, query_args)
             return post
         except Exception:
             self.raise_error('Error deleting a post: {id}', id=id)
