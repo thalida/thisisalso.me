@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+
+        <meta name="robots" content="index,follow">
+
+        <title>thisisalso.me - {% block title %}{% endblock %}</title>
+        <meta name="description" content="just another rando on the internet.">
+
+        <link href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/monokai-sublime.min.css" rel="stylesheet">
+        <link href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+        <link href="{{url_for('static', filename='styles/quill.blizzard.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='styles/core.css')}}" rel="stylesheet">
+
+        <!-- View Styles -->
+        {% block styles %}{% endblock %}
+    </head>
+    <body>
+        <header>
+            <nav>
+                <a href="/">home</a>
+            </nav>
+        </header>
+        {% block body %}{% endblock %}
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

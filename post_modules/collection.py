@@ -70,26 +70,15 @@ class Collection():
         self.__collection[post.id] = post
         return self.__collection
 
+    def remove(self, post_id):
+        self.__collection.pop(post_id, None)
+
     @staticmethod
     def raise_error(msg, **kwargs):
         msg = 'spomething bad happended' if msg is None else msg
         msg = msg.format(**kwargs)
         logger.exception(msg)
         raise Exception(msg)
-
-    # def get_latest_version_for_post(self, id):
-    #     post = self.find(id)
-    #     return post.latest_version.to_dict() if post is not None else None
-
-    # def get_all_versions(self):
-    #     return {post_id: self.get_versions_for_post(post_id) for post_id in self.__collection.keys()}
-
-    # def get_versions_for_post(self, id):
-    #     post = self.find(id)
-    #     return {
-    #         post_version.versioned_date.isoformat(): post_version.to_dict()
-    #         for k, post_version in post.version_collection.items()
-    #     } if post is not None else None
 
 collection = Collection()
 

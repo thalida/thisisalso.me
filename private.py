@@ -39,26 +39,32 @@ app.jinja_env.filters['html_excerpt'] = html_excerpt
 
 @app.route('/')
 def view__index():
-    posts = collection.get_all_latest_post_versions()
-    sorted_posts = sorted(posts.items(),
-                            key=lambda p: p[1]['last_modified_date'],
-                            reverse=True)
-    sorted_posts_dict = {x: y for x, y in sorted_posts}
-    return render_template('private/views/list.html', posts=sorted_posts_dict)
+    try:
+        posts = collection.get_all_latest_post_versions()
+        sorted_posts = sorted(posts.items(),
+                                key=lambda p: p[1]['last_modified_date'],
+                                reverse=True)
+        sorted_posts_dict = {x: y for x, y in sorted_posts}
+        return render_template('views/list.html', posts=sorted_posts_dict)
+    except Exception:
+        abort(404)
 
 @app.route('/<int:post_id>')
 def view__post_read(post_id):
-    post = collection.get_post_lastest_version(post_id)
-    return render_template('private/views/read.html', post_id=post_id, post=post)
-
-@app.route('/<int:post_id>/edit')
-def view__post_edit(post_id):
-    post = collection.get_post_lastest_version(post_id)
-    return render_template('private/views/edit.html', post_id=post_id, post=post)
+    try:
+        post = collection.get_post_lastest_version(post_id)
+        return render_template('views/read.html', post_id=post_id, post=post)
+    except Exception:
+        abort(404)
 
 @app.route('/new')
-def view__post_new():
-    return render_template('private/views/edit.html')
+@app.route('/<int:post_id>/edit')
+def view__post_edit(post_id=None):
+    try:
+        post = collection.get_post_lastest_version(post_id) if post_id is not None else None
+        return render_template('views/edit.html', post_id=post_id, post=post)
+    except Exception:
+        abort(404)
 
 
 @app.route('/api/collection/posts', methods=['GET'])
@@ -90,8 +96,8 @@ def api__post_delete():
         api_json = request.get_json()
         post_id = api_json.get('id')
         post = collection.get_or_create(post_id).delete()
-        collection.store(post)
-        return make_response(jsonify(post.latest_version.to_dict()))
+        collection.remove(post_id)
+        return make_response(jsonify({'status': 'success'}))
     except Exception:
         logger.exception('500 Error Deleting Post')
         abort(500)

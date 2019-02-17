@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}
+Reading Post #{{post.id}}
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    let post = {{post|default({})|tojson}};
+</script>
+<script src="{{url_for('static', filename='scripts/read.js')}}" type="text/javascript"></script>
+{% endblock %}
+
+{% block body %}
+<div class="ql-container ql-snow ql-container--full" data-theme="{{post['theme']}}">
+    <div id="post" class="ql-editor">
+        {{post['contents']|safe}}
+    </div>
+</div>
+{% endblock %}

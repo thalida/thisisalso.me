@@ -1,11 +1,10 @@
 var icons = Quill.import('ui/icons');
 var Delta = Quill.import('delta');
 var BlockEmbed = Quill.import('blots/block/embed');
-var forceSave = false;
-var isSaving = false;
-
-// Store accumulated changes
 var change = new Delta();
+let container = document.querySelector('[data-quill-container]');
+var forceSave = false;
+var isMakingAPIRequest = false;
 var selectedTheme = null;
 
 class DividerBlot extends BlockEmbed { }
@@ -13,7 +12,7 @@ DividerBlot.blotName = 'divider';
 DividerBlot.tagName = 'hr';
 Quill.register(DividerBlot);
 
-icons.header[3] = `
+icons['header'][3] = `
 <svg width="17px" height="12px" viewBox="0 0 17 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="h3" fill="currentColor">
@@ -22,7 +21,7 @@ icons.header[3] = `
     </g>
 </svg>`;
 
-icons.divider = `
+icons['divider'] = `
 <svg width="16px" height="16px" viewBox="0 0 17 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="h3" fill="currentColor">
@@ -30,6 +29,19 @@ icons.divider = `
         </g>
     </g>
 </svg>`;
+
+icons['post-delete']= `
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+     height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+    <g id="_x35_3-interface_-_cross_cancel" style="enable-background:new    ;">
+        <path d="M8.696,7.499l6.164-6.165c0.193-0.191,0.193-0.504,0-0.695c-0.191-0.192-0.502-0.192-0.695,0L8,6.803L1.835,0.639
+            c-0.192-0.192-0.504-0.192-0.696,0c-0.192,0.191-0.192,0.504,0,0.695l6.165,6.165L1.14,13.663c-0.192,0.192-0.192,0.504,0,0.696
+            c0.192,0.192,0.503,0.192,0.696,0L8,8.194l6.164,6.165c0.193,0.192,0.504,0.192,0.695,0c0.193-0.192,0.193-0.504,0-0.696
+            L8.696,7.499z"/>
+    </g>
+</svg>
+
+`;
 
 var toolbarOptions = [
   [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }],
@@ -41,6 +53,8 @@ var toolbarOptions = [
   [{ 'align': 'center' }, {'align': 'right'}],
   ['clean'],
   [{'post-theme': null}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}],
+  [],
+  ['post-delete'],
 ];
 
 var quill = new Quill('[data-quill-container]', {
@@ -53,6 +67,9 @@ var quill = new Quill('[data-quill-container]', {
                 selectedTheme = themeId
                 $('[data-quill-container]').attr('data-theme', selectedTheme);
                 forceSave = true;
+            },
+            'post-delete': function() {
+                deletePost();
             },
             'divider': function() {
                 let range = this.quill.getSelection(true);
@@ -79,14 +96,9 @@ function getHTML(delta) {
     return tempQuill.root.innerHTML;
 }
 
-quill.on('text-change', function(delta) {
-  change = change.compose(delta);
-});
-
-// Save periodically
-setInterval(function() {
-    if (!isSaving && (change.length() > 0 || forceSave)) {
-        isSaving = true;
+function savePost() {
+    if (!isMakingAPIRequest && (change.length() > 0 || forceSave)) {
+        isMakingAPIRequest = true;
 
         $.ajax({
             method: "POST",
@@ -101,17 +113,53 @@ setInterval(function() {
         })
         .done(function( res ) {
             post = res;
-            isSaving = false;
+            isMakingAPIRequest = false;
             forceSave = false;
         });
 
         change = new Delta();
     }
-}, 3*1000);
+}
 
-// Check for unsaved data
-window.onbeforeunload = function() {
+function deletePost() {
+    if (!isMakingAPIRequest) {
+        isMakingAPIRequest = true;
+
+        $.ajax({
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            url: "/api/post/delete",
+            data: JSON.stringify({
+                id: post.id,
+            }),
+        })
+        .done(function() {
+            isMakingAPIRequest = false;
+            window.location.href = '/';
+        });
+
+        change = new Delta();
+    }
+}
+
+function handleTextChange(delta) {
+    change = change.compose(delta);
+}
+
+function handleWindowUnload() {
   if (change.length() > 0) {
     return 'There are unsaved changes. Are you sure you want to leave?';
   }
 }
+
+function handleDoubleClick() {
+    if (post !== null && typeof post.id !== 'undefined' && post.id !== null) {
+        window.open(`/${post.id}`, '_self');
+    }
+}
+
+container.addEventListener('dblclick', handleDoubleClick);
+quill.on('text-change', handleTextChange);
+setInterval(savePost, 3*1000);
+window.onbeforeunload = handleWindowUnload();
