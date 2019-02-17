@@ -6,8 +6,8 @@ from collections import defaultdict
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from post_modules import STATUS_CODES, psql
-from post_modules.post import Post
+from app import STATUS_CODES, psql
+from app.post.post import Post
 
 logger = logging.getLogger(__name__)
 

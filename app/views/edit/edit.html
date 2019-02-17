@@ -14,7 +14,7 @@ Editing Post #{{post.id}}
     let post = {{post|default({})|tojson}};
 </script>
 
-<script src="{{url_for('static', filename='scripts/edit.js')}}" type="text/javascript"></script>
+<script src="{{url_for('static', filename='edit/edit.js')}}" type="text/javascript"></script>
 {% endblock %}
 
 {% block body %}

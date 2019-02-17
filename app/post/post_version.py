@@ -5,7 +5,7 @@ from flask import Markup
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from post_modules import STATUS_CODES
+from app import STATUS_CODES
 
 logger = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class PostVersion():
         return self.last_modified_date
 
     def raise_error(self, msg, **kwargs):
-        msg = 'modules.post: bad things happended' if msg is None else msg
+        msg = 'app.post.post_version: bad things happended' if msg is None else msg
         msg = msg.format(**kwargs)
         logger.exception(msg)
         raise Exception(msg)

@@ -7,8 +7,8 @@ import datetime
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from post_modules import VERSION_AFTER_MINUTES, STATUS_CODES, psql
-from post_modules.post_version import PostVersion
+from app import VERSION_AFTER_MINUTES, STATUS_CODES, psql
+from app.post.post_version import PostVersion
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +147,7 @@ class Post():
             self.raise_error('Error deleting a post: {id}', id=self.id)
 
     def raise_error(self, msg, **kwargs):
-        msg = 'modules.post: bad things happended' if msg is None else msg
+        msg = 'app.post.post: bad things happended' if msg is None else msg
         msg = msg.format(**kwargs)
         logger.exception(msg)
         raise Exception(msg)
