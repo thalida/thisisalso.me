@@ -7,7 +7,7 @@ from pprint import pprint
 import datetime
 import json
 
-from flask import Flask
+from flask import Flask, abort, render_template
 from flask_socketio import SocketIO, emit
 
 from app.routes.shared import shared_routes, html_excerpt
@@ -20,9 +20,13 @@ app.jinja_env.filters['html_excerpt'] = html_excerpt
 app.register_blueprint(shared_routes)
 socketio = SocketIO(app)
 
-def to_json(obj):
+def to_json(post_obj):
+    postcard = render_template('_partials/postcard.html', post=post_obj)
+    postfull = render_template('_partials/postfull.html', post=post_obj)
+    post_obj['postcard'] = postcard
+    post_obj['postfull'] = postfull
     return json.dumps(
-        obj,
+        post_obj,
         default=lambda o: o.isoformat() if isinstance(o, datetime.datetime) else o
     )
 

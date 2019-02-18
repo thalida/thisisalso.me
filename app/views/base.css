@@ -77,7 +77,10 @@ header {
 /* White/Default */
 *[data-theme="None"],
 *[data-theme="None"] .ql-editor:after,
-.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] {
+.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] ,
+*[data-theme="true"],
+*[data-theme="true"] .ql-editor:after,
+.ql-snow.ql-toolbar button.ql-post-theme[data-theme="true"] {
     background-color: #fff;
     color: #555;
 }

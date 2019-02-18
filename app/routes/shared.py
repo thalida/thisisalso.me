@@ -53,9 +53,7 @@ def view_read(post_id):
 def not_found(error):
     return make_response('', 404)
 
-
-
-def html_excerpt(html, num_characters=100, append_string="…"):
+def html_excerpt(html, num_characters=100, append_string="…", from_api=False):
     soup = BeautifulSoup(html, 'html5lib')
     full_text = soup.get_text()
 

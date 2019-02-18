@@ -1,23 +1,15 @@
 var socket = io('http://0.0.0.0:5002');
-socket.on('post_update', function() {
-    console.log(arguments)
-});
+socket.on('post_update', function(res) {
+    const page = window.location.pathname
+    const post = JSON.parse(res);
 
-// websocket = new WebSocket("ws://0.0.0.0:5678/");
-// websocket.onmessage = function (event) {
-//     data = JSON.parse(event.data);
-//     console.log(data)
-//     switch (data.type) {
-//         case 'state':
-//             value.textContent = data.value;
-//             break;
-//         case 'users':
-//             users.textContent = (
-//                 data.count.toString() + " user" +
-//                 (data.count == 1 ? "" : "s"));
-//             break;
-//         default:
-//             console.error(
-//                 "unsupported event", data);
-//     }
-// };
+    if (page.indexOf('edit') >= 0 || page.indexOf('new') >= 0) {
+        console.log("Uh, hi... maybe figure out what to do here!?")
+    } else {
+        const postEl = document.querySelector(`[data-post-id="${post.id}"]`);
+        const newPostHTML = (page === '/') ? post['postcard'] : post['postfull']
+        const doc = new DOMParser().parseFromString(newPostHTML, 'text/html');
+        const newPostEl = doc.body.firstChild
+        postEl.parentNode.replaceChild(newPostEl, postEl);
+    }
+});

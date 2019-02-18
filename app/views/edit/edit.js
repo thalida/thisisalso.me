@@ -5,7 +5,7 @@ var change = new Delta();
 let container = document.querySelector('[data-quill-container]');
 var forceSave = false;
 var isMakingAPIRequest = false;
-var selectedTheme = null;
+var selectedTheme =  $('[data-quill-container]').data('theme');
 
 class DividerBlot extends BlockEmbed { }
 DividerBlot.blotName = 'divider';
@@ -146,5 +146,5 @@ function handleDoubleClick() {
 
 container.addEventListener('dblclick', handleDoubleClick);
 quill.on('text-change', handleTextChange);
-setInterval(savePost, 3*1000);
+setInterval(savePost, 1*1000);
 window.onbeforeunload = handleWindowUnload();

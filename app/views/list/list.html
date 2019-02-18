@@ -14,15 +14,7 @@
 <ol class="posts">
     {% for post in posts %}
     <li>
-        <div class="ql-container ql-snow ql-container--card"
-             href="/{{post['id']}}"
-             role="link"
-             data-theme="{{post['theme']}}"
-             tabindex="0">
-            <div class="ql-editor">
-                {{post['contents']|html_excerpt(345)|safe}}
-            </div>
-        </div>
+        {% include "_partials/postcard.html" %}
     </li>
     {% endfor %}
 </ol>
