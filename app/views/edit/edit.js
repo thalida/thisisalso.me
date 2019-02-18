@@ -51,7 +51,7 @@ var toolbarOptions = [
   [{ 'indent': '-1'}, { 'indent': '+1' }],
   [{ 'align': 'center' }, {'align': 'right'}],
   ['clean'],
-  [{'post-theme': 0}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}],
+  [{'post-theme': 0}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}, {'post-theme': 6}],
   [],
   ['post-delete'],
 ];
