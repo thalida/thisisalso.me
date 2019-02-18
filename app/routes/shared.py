@@ -18,12 +18,16 @@ shared_routes = Blueprint(
     static_folder='../views'
 )
 
+def get_is_admin():
+    is_admin = os.getenv(AMDIN_ENV_KEY, False) in [True, 'true']
+    return is_admin
+
 @shared_routes.route('/')
 def view_index():
     try:
         posts = postModels.fetch_all()
         return render_template('list/list.html',
-                                is_admin=os.getenv(AMDIN_ENV_KEY, False),
+                                is_admin=get_is_admin(),
                                 posts=posts)
     except Exception:
         logger.exception('')
@@ -38,7 +42,7 @@ def view_read(post_id):
             abort(404)
 
         return render_template('read/read.html',
-                                is_admin=os.getenv(AMDIN_ENV_KEY, False),
+                                is_admin=get_is_admin(),
                                 post_id=post_id,
                                 post=post)
     except Exception:

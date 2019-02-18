@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block nav_links %}
-{% if is_admin %}
-<a href="/new">write</a>
-{% endif %}
+    {% if is_admin %}
+        <a href="/new">write</a>
+    {% endif %}
 {% endblock %}
 
 {% block body %}

@@ -1,9 +1,10 @@
 import logging
+import datetime
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from app import STATUS_CODES
+from app import STATUS_CODES, VERSION_AFTER_MINUTES
 
 logger = logging.getLogger(__name__)
 
@@ -142,8 +143,9 @@ class PostModels(object):
             self.raise_error('Error updating a post: {post}',
                             post=new_version_obj)
 
-    def delete(self, id):
+    def delete(self, api_json):
         try:
+            id = api_json.get('id', None)
             query = "UPDATE post SET status=%s WHERE id=%s RETURNING *"
             query_args = (STATUS_CODES['DELETED'], id,)
             post = self.execute('fetchone', query, query_args)

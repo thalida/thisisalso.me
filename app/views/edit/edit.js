@@ -100,19 +100,12 @@ function savePost() {
     if (!isMakingAPIRequest && (change.length() > 0 || forceSave)) {
         isMakingAPIRequest = true;
 
-        $.ajax({
-            method: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "/api/post/upsert",
-            data: JSON.stringify({
-                id: post.id,
-                theme: selectedTheme,
-                contents: getHTML(quill.getContents()),
-            }),
-        })
-        .done(function( res ) {
-            post = res;
+        socket.emit('save', {
+            id: (post) ? post.id : null,
+            theme: selectedTheme,
+            contents: getHTML(quill.getContents()),
+        }, function (res) {
+            post = JSON.parse(res);
             isMakingAPIRequest = false;
             forceSave = false;
         });
@@ -122,19 +115,11 @@ function savePost() {
 }
 
 function deletePost() {
-    if (!isMakingAPIRequest) {
+    if (!isMakingAPIRequest && post && post.id) {
         isMakingAPIRequest = true;
 
-        $.ajax({
-            method: "POST",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            url: "/api/post/delete",
-            data: JSON.stringify({
-                id: post.id,
-            }),
-        })
-        .done(function() {
+        socket.emit('delete', { id: post.id }, function (res) {
+            post = JSON.parse(res);
             isMakingAPIRequest = false;
             window.location.href = '/';
         });
