@@ -10,6 +10,7 @@ import json
 from flask import Flask, abort, render_template
 from flask_socketio import SocketIO, emit
 
+from app import DEFAULT_THEME
 from app.routes.shared import shared_routes, html_excerpt
 from app.models import postModels
 
@@ -35,8 +36,8 @@ def to_json(post_obj):
 @app.route('/<int:post_id>/edit')
 def view_edit(post_id=None):
     try:
-        post = postModels.fetch_one(post_id)
-        return render_template('edit/edit.html', post_id=post_id, post=post)
+        post = postModels.fetch_one(post_id, return_default=True)
+        return render_template('edit/edit.html', post=post)
     except Exception:
         logger.exception('Error viewing edit post')
         abort(404)

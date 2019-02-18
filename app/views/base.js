@@ -20,15 +20,17 @@ ROUTER.CURRENT_PAGE = (function getCurrentPage() {
 })();
 
 const KEYCODES = { ENTER:13 };
+const POSTS_CONTAINER_MARGIN = 25;
 const MACY_SETTINGS = {
     container: '[data-posts-container]',
     mobileFirst: true,
     columns: 1,
-    margin: 50,
-    trueOrder: true,
+    margin: POSTS_CONTAINER_MARGIN,
+    trueOrder: false,
     breakAt: {
-        700: 2,
-        1024: 3,
+        600: 2,
+        900: 3,
+        1300: 4,
     },
 };
 let posts_container_el = null;
@@ -49,19 +51,20 @@ function handlePostUpdate(res) {
         const doc = new DOMParser().parseFromString(newPostHTML, 'text/html');
         const newPostEl = doc.body.firstChild
 
+
         if (currPostEl) {
             currPostEl.removeEventListener('click', handleCardNavigate);
             currPostEl.removeEventListener('keydown', handleCardNavigate);
-            currPostEl.parentElement.replaceChild(newPostEl, currPostEl);
-        } else {
-            posts_container_el = (posts_container_el === null) ? document.querySelector('[data-posts-container]') : posts_container_el;
-            posts_container_el.prepend(newPostEl);
+            currPostEl.remove();
         }
+
+        posts_container_el = (posts_container_el === null) ? document.querySelector('[data-posts-container]') : posts_container_el;
+        posts_container_el.prepend(newPostEl);
 
         newPostEl.addEventListener('click', handleCardNavigate);
         newPostEl.addEventListener('keydown', handleCardNavigate);
 
-        macyInstance.recalculate(true);
+        macyInstance.recalculate(true, true);
 
         return;
     }
@@ -87,6 +90,7 @@ function handlePostUpdate(res) {
 
 function handleMacyRecalculated() {
     const postsContainerEl = document.querySelector('[data-posts-container]');
+    postsContainerEl.style.width = `calc(100% - ${POSTS_CONTAINER_MARGIN * 2}px)`;
     postsContainerEl.style.display = 'block';
 }
 

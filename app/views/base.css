@@ -14,8 +14,7 @@ body {
     margin: 0;
     padding: 0;
     font: normal 16px/1.4 'PT Sans', sans-serif;
-    background-color: #464063;
-    /*background-color: #d6ffea;*/
+    background-color: #fff;
 }
 
 header {
@@ -24,7 +23,8 @@ header {
 
 .posts {
     display: none;
-    margin: 50px;
+    max-width: 2048px;
+    margin: 0 auto;
 }
 
 .ql-container--card {
@@ -32,8 +32,8 @@ header {
     cursor: pointer;
     font-size: 13px;
     padding: 2%;
-    box-shadow: 0 30px 0px -20px rgba(0,0,0,0.2);
-    transition: transform 400ms;
+    transition: transform 400ms, box-shadow 400ms;
+    overflow: unset;
 }
 
 .ql-container--card .ql-editor > * {
@@ -42,8 +42,8 @@ header {
 
 .ql-container--card:hover {
     cursor: pointer;
-    transform: scale(1.1);
-    z-index: 10;
+    transform: scale(1.005) matrix3d(1, 0, 0, 0.00009, 0, 1, 0, 0.00005, 0, 0, 1, 0, 0, 0, 0, 1);
+    box-shadow: 0 25px 20px -20px rgba(0,0,0,0.1);
 }
 
 .ql-container--with-toolbar {
@@ -60,25 +60,19 @@ header {
     display: none;
 }
 
-/* White/Default */
-*[data-theme="None"],
-*[data-theme="None"] .ql-editor:after,
-.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] ,
-*[data-theme="true"],
-*[data-theme="true"] .ql-editor:after,
-.ql-snow.ql-toolbar button.ql-post-theme[data-theme="true"] {
+/* White (Default Theme) */
+*[data-theme="0"],
+*[data-theme="0"] .ql-editor:after,
+.ql-snow.ql-toolbar button.ql-post-theme[data-theme="0"] {
     background-color: #fff;
     color: #555;
-}
-
-*[data-theme="None"],
-.ql-snow.ql-toolbar button.ql-post-theme[data-theme="None"] {
     border: 1px solid #ddd;
 }
 
 /* Gray */
 *[data-theme="1"],
 *[data-theme="1"] .ql-editor:after,
+.ql-container--card[data-theme="true"]:before,
 .ql-snow.ql-toolbar button.ql-post-theme[data-theme="1"] {
     background-color: #efefef;
     color: #333;

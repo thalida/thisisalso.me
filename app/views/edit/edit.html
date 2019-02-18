@@ -24,7 +24,7 @@ Edit #{{post.id}}
 {% block body %}
 <div class="ql-container--with-toolbar"
      data-quill-container
-     data-theme="{{post['theme']|default(None)}}">
+     data-theme="{{post['theme']}}">
     {% if post %}
         {{post['contents']|safe}}
     {% endif %}

@@ -4,7 +4,6 @@ STATUS_CODES = {
     "DELETED": 0,
     "ENABLED": 1,
 }
-SUPPORTED_THEMES = {
-    'Red': 'red',
-    'Blue': '#0000ff',
-}
+
+DEFAULT_THEME = 0
+DEFAULT_STATUS = STATUS_CODES['ENABLED']

@@ -5,7 +5,6 @@ var change = new Delta();
 let container = document.querySelector('[data-quill-container]');
 var forceSave = false;
 var isMakingAPIRequest = false;
-var selectedTheme =  $('[data-quill-container]').data('theme');
 
 class DividerBlot extends BlockEmbed { }
 DividerBlot.blotName = 'divider';
@@ -52,7 +51,7 @@ var toolbarOptions = [
   [{ 'indent': '-1'}, { 'indent': '+1' }],
   [{ 'align': 'center' }, {'align': 'right'}],
   ['clean'],
-  [{'post-theme': null}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}],
+  [{'post-theme': 0}, {'post-theme': 1}, {'post-theme': 2}, {'post-theme': 3}, {'post-theme': 4}, {'post-theme': 5}],
   [],
   ['post-delete'],
 ];
@@ -64,8 +63,8 @@ var quill = new Quill('[data-quill-container]', {
         container: toolbarOptions,
         handlers: {
             'post-theme': function(themeId) {
-                selectedTheme = themeId
-                $('[data-quill-container]').attr('data-theme', selectedTheme);
+                post['theme'] = themeId
+                $('[data-quill-container]').attr('data-theme', post['theme']);
                 forceSave = true;
             },
             'post-delete': function() {
@@ -102,7 +101,7 @@ function savePost() {
 
         socket.emit('save', {
             id: (post) ? post.id : null,
-            theme: selectedTheme,
+            theme: post['theme'],
             contents: getHTML(quill.getContents()),
         }, function (res) {
             post = JSON.parse(res);

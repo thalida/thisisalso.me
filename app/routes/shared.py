@@ -43,7 +43,6 @@ def view_read(post_id):
 
         return render_template('read/read.html',
                                 is_admin=get_is_admin(),
-                                post_id=post_id,
                                 post=post)
     except Exception:
         logger.exception('')

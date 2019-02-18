@@ -4,7 +4,7 @@ import datetime
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from app import STATUS_CODES, VERSION_AFTER_MINUTES
+from app import STATUS_CODES, VERSION_AFTER_MINUTES, DEFAULT_THEME, DEFAULT_STATUS
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class PostModels(object):
                     FROM post as p2
                     WHERE p2.id = p1.id
                 )
-                ORDER BY p1.versioned_date DESC
+                ORDER BY p1.last_modified_date DESC
                 """,
                 (STATUS_CODES['DELETED'],)
             )
@@ -60,7 +60,7 @@ class PostModels(object):
         pass
 
 
-    def fetch_one(self, id):
+    def fetch_one(self, id, return_default=False):
         try:
             post = self.execute(
                 'fetchone',
@@ -74,6 +74,14 @@ class PostModels(object):
                 LIMIT 1
                 """,
                 (id, STATUS_CODES['DELETED'],))
+
+            if post is None and return_default:
+                post = {
+                    'id': None,
+                    'contents': '',
+                    'theme': DEFAULT_THEME,
+                    'status': DEFAULT_STATUS,
+                }
 
             return post
         except Exception:
@@ -99,8 +107,8 @@ class PostModels(object):
     def create(self, id, new_version_obj):
         try:
             contents = new_version_obj.get('contents', '')
-            theme = new_version_obj.get('theme', None)
-            status = new_version_obj.get('status', STATUS_CODES['ENABLED'])
+            theme = new_version_obj.get('theme', DEFAULT_THEME)
+            status = new_version_obj.get('status', DEFAULT_STATUS)
 
             if id is None:
                 query = """
@@ -126,7 +134,7 @@ class PostModels(object):
     def update(self, id, new_version_obj):
         try:
             contents = new_version_obj.get('contents', '')
-            theme = new_version_obj.get('theme', None)
+            theme = new_version_obj.get('theme', DEFAULT_THEME)
             status = new_version_obj.get('status')
             versioned_date = new_version_obj.get('versioned_date')
 
