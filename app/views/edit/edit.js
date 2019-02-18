@@ -121,7 +121,12 @@ function deletePost() {
         socket.emit('delete', { id: post.id }, function (res) {
             post = JSON.parse(res);
             isMakingAPIRequest = false;
-            window.location.href = '/';
+
+            if (ROUTER.CURRENT_PAGE['name'] === ROUTER.PAGE_NAMES.EDIT) {
+                window.location.href = '/';
+            } else {
+                window.location.reload()
+            }
         });
 
         change = new Delta();

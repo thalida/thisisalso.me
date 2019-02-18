@@ -38,8 +38,6 @@ def view_read(post_id):
     try:
         post = postModels.fetch_one(post_id)
 
-        print(post)
-
         if post is None:
             abort(404)
 
