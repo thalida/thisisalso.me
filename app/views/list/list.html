@@ -11,11 +11,9 @@
 {% endblock %}
 
 {% block body %}
-<ol class="posts">
+<div class="posts" data-posts-container>
     {% for post in posts %}
-    <li>
         {% include "_partials/postcard.html" %}
-    </li>
     {% endfor %}
-</ol>
+</div>
 {% endblock %}

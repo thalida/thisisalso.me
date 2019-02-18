@@ -74,6 +74,10 @@ header {
     height: auto;
 }
 
+*[data-status="0"] {
+    display: none;
+}
+
 /* White/Default */
 *[data-theme="None"],
 *[data-theme="None"] .ql-editor:after,

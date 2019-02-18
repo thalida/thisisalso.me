@@ -45,11 +45,11 @@ class PostModels(object):
                 FROM post as p1
                 WHERE
                     status != %s
-                    AND p1.versioned_date = (
-                        SELECT max(p2.versioned_date)
-                        FROM post as p2
-                        WHERE p2.id = p1.id
-                    )
+                AND p1.versioned_date = (
+                    SELECT max(p2.versioned_date)
+                    FROM post as p2
+                    WHERE p2.id = p1.id
+                )
                 ORDER BY p1.versioned_date DESC
                 """,
                 (STATUS_CODES['DELETED'],)
@@ -69,10 +69,11 @@ class PostModels(object):
                 FROM post as p1
                 WHERE
                     id = %s
+                AND status != %s
                 ORDER BY versioned_date DESC
                 LIMIT 1
                 """,
-                (id,))
+                (id, STATUS_CODES['DELETED'],))
 
             return post
         except Exception:
