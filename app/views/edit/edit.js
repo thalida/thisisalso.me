@@ -38,11 +38,26 @@ icons['post-delete']= `
             c0.192,0.192,0.503,0.192,0.696,0L8,8.194l6.164,6.165c0.193,0.192,0.504,0.192,0.695,0c0.193-0.192,0.193-0.504,0-0.696
             L8.696,7.499z"/>
     </g>
-</svg>
+</svg>`;
 
+icons['exit_editor']=`
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="16px"
+   height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+<g id="_x31_04-interface_-_resize_normalscreen" style="enable-background:new    ;">
+  <path d="M13.857,2.143c-0.195-0.194-0.51-0.194-0.703,0L10,5.297V2.499c0-0.276-0.225-0.5-0.5-0.5S9,2.223,9,2.499v4
+    c0,0.276,0.225,0.5,0.5,0.5h4c0.275,0,0.5-0.224,0.5-0.5s-0.225-0.5-0.5-0.5h-2.799l3.156-3.154
+    C14.051,2.65,14.051,2.336,13.857,2.143z M6.5,8.999h-4c-0.276,0-0.5,0.224-0.5,0.5s0.224,0.5,0.5,0.5h2.798l-3.155,3.154
+    c-0.194,0.194-0.194,0.508,0,0.702c0.194,0.194,0.508,0.194,0.703,0L6,10.701v2.798c0,0.276,0.224,0.5,0.5,0.5
+    c0.276,0,0.5-0.224,0.5-0.5v-4C7,9.223,6.776,8.999,6.5,8.999z M14-0.001H2c-1.104,0-2,0.896-2,2v12c0,1.104,0.896,2,2,2h12
+    c1.105,0,2-0.896,2-2v-12C16,0.895,15.105-0.001,14-0.001z M15,13.999c0,0.552-0.447,1-1,1H2c-0.552,0-1-0.448-1-1v-12
+    c0-0.552,0.448-1,1-1h12c0.553,0,1,0.448,1,1V13.999z"/>
+</g>
+</svg>
 `;
 
 var toolbarOptions = [
+  ['exit_editor'],
+  [],
   [{ 'header': 1 }, { 'header': 2 }, { 'header': 3 }],
   ['bold', 'italic', 'underline', 'strike', 'code'],
   ['blockquote', 'code-block', 'divider'],
@@ -62,6 +77,9 @@ var quill = new Quill('[data-quill-container]', {
     toolbar: {
         container: toolbarOptions,
         handlers: {
+            'exit_editor': function() {
+                window.open(`/${(post.id) ? post.id : ''}`, '_self');
+            },
             'post-theme': function(themeId) {
                 post['theme'] = themeId
                 $('[data-quill-container]').attr('data-theme', post['theme']);
@@ -142,13 +160,6 @@ function handleWindowUnload() {
   }
 }
 
-function handleDoubleClick() {
-    if (post !== null && typeof post.id !== 'undefined' && post.id !== null) {
-        window.open(`/${post.id}`, '_self');
-    }
-}
-
-container.addEventListener('dblclick', handleDoubleClick);
 quill.on('text-change', handleTextChange);
 setInterval(savePost, 1*1000);
 window.onbeforeunload = handleWindowUnload();
