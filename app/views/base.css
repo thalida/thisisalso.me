@@ -17,8 +17,23 @@ body {
     background-color: #fff;
 }
 
-header {
-    height: 50px;
+.header {
+    padding: 20px 25px;
+}
+
+.nav {
+    text-align: left;
+}
+
+.nav__link {
+    text-decoration: none;
+    color: #000;
+    margin-right: 15px;
+}
+
+.nav__link--home {
+    font-family: 'VT323', monospace;
+    font-size: 2.0rem;
 }
 
 .posts {
@@ -62,6 +77,14 @@ header {
     width: 80%;
     margin: 0 auto;
     max-width: 800px;
+    padding: 50px 0;
+}
+
+@media (max-width: 800px) {
+    .ql-container--full .ql-editor,
+    .ql-container--with-toolbar .ql-editor {
+        min-width: calc(100% - 50px);
+    }
 }
 
 *[data-status="0"] {
