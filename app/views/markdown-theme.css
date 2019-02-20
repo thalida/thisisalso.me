@@ -22,50 +22,12 @@
 
  .ql-editor a {
     text-decoration: underline;
-    color: black;
+    color: inherit !important;
  }
 
- /*.ql-editor a {
-    display: inline-block;
-    position: relative;
-    font-size: 1em;
-    line-height: 1em;
-    color: #1C2233;
-    text-decoration: none;
-    text-shadow:
-      0.05em  0.05em     #fff,
-     -0.05em  0.05em     #fff,
-      0.05em -0.05em     #fff,
-     -0.05em -0.05em     #fff;
-
-    -webkit-transition: text-shadow 150ms;
-    -o-transition: text-shadow 150ms;
-    transition: text-shadow 150ms;
+.ql-editor a:hover {
+    color: #000 !important;
 }
-     .ql-editor a:after {
-        content: "";
-        display: block;
-        position: absolute;
-        z-index: -1;
-        height: 2px;
-        width: 100%;
-        bottom: -.1em;
-        background-color: #1C2233;
-        -webkit-transition: height 150ms, background-color 150ms;
-        -o-transition: height 150ms, background-color 150ms;
-        transition: height 150ms, background-color 150ms;
-    }
-     .ql-editor a:hover,
-     .ql-editor a:visited:hover {
-        text-shadow: none;
-    }
-     .ql-editor a:hover:after,
-     .ql-editor a:visited:hover:after {
-        height: 100%;
-        background-color: #1EFF7A;
-        background-color: #FFDADA;
-        background-color: #FFF433;
-    }*/
 
 .ql-editor .section2,
 .ql-editor .section3 {
@@ -100,7 +62,7 @@
 .ql-editor h6 { font-size: 0.8em; }
 
 .ql-editor p {
-    margin: 0.5rem 0 1.5rem 0;
+    margin: 0.5rem 0;
     line-height: 1.8em;
 }
 
@@ -146,8 +108,8 @@
     display: block;
     height: 1px;
     border: 0;
-    border-top: 4px solid #E5E6E7;
-    margin: 3.5rem auto;
+    border-top: 2px solid rgba(255, 255, 255, 1);
+    margin: 1.5rem auto;
     padding: 0;
     width: 100%;
 }

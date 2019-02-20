@@ -28,7 +28,7 @@ const MACY_SETTINGS = {
     margin: POSTS_CONTAINER_MARGIN,
     trueOrder: false,
     breakAt: {
-        600: 2,
+        700: 2,
         900: 3,
         1300: 4,
     },
