@@ -45,7 +45,6 @@ body {
 .ql-container--card {
     height: auto;
     cursor: pointer;
-    font-size: 16px;
     padding: 2%;
     transition: transform 400ms, box-shadow 400ms;
     overflow: unset;
@@ -60,6 +59,11 @@ body {
     transform: scale(1.005) matrix3d(1, 0, 0, 0.00009, 0, 1, 0, 0.00005, 0, 0, 1, 0, 0, 0, 0, 1);
 }
 
+.ql-container--card:nth-child(3n):hover,
+.ql-container--card:nth-child(7n):hover {
+    transform: scale(1.005) matrix3d(1, 0, 0, -0.00009, 0, 1, 0, 0.00005, 0, 0, 1, 0, 0, 0, 0, 1);
+}
+
 .ql-container--full {
     min-height: 100%;
     height: auto;
@@ -72,6 +76,12 @@ body {
     min-height: calc(100% - 50px - 50px);
 }
 
+.ql-container--card,
+.ql-container--full,
+.ql-container--with-toolbar {
+    font-size: 10px;
+}
+
 .ql-container--full .ql-editor,
 .ql-container--with-toolbar .ql-editor {
     width: 80%;
@@ -81,6 +91,10 @@ body {
 }
 
 @media (max-width: 800px) {
+    .nav {
+        text-align: center;
+    }
+
     .ql-container--full .ql-editor,
     .ql-container--with-toolbar .ql-editor {
         min-width: calc(100% - 50px);

@@ -416,7 +416,7 @@
 .ql-snow .ql-direction.ql-active svg:first-child {
   display: none;
 }
-.ql-snow .ql-editor h1 {
+/*.ql-snow .ql-editor h1 {
   font-size: 2em;
 }
 .ql-snow .ql-editor h2 {
@@ -462,7 +462,7 @@
   background-color: #23241f;
   color: #f8f8f2;
   overflow: visible;
-}
+}*/
 .ql-snow .ql-editor img {
   max-width: 100%;
 }
