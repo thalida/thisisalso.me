@@ -223,10 +223,10 @@
         },
         "python-engineio": {
             "hashes": [
-                "sha256:338b4b3166901d90c60e6aec1903c216225c455fa7c00358b4faf9786f713f45",
-                "sha256:fad55b66b1875bc459d48e6f0ecafb99d011821a16f6cf5e4c4271dd9b900ff4"
+                "sha256:d344a12a43d6ce47aa194a5a59a7b02650e3c6ec87cbc7250fdfd339142c8ae7",
+                "sha256:f9ab04912973ec051a50bf3575d5ad32363b07d06221676439c343acbd151e1c"
             ],
-            "version": "==3.4.1"
+            "version": "==3.4.2"
         },
         "python-socketio": {
             "hashes": [

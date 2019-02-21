@@ -34,7 +34,8 @@ const MACY_SETTINGS = {
     },
 };
 let posts_container_el = null;
-let socket = io(`http://${window.location.hostname}:5002`);
+const socketioHost = (window.location.port === '') ? `https://admin.thisisalso.me` : `http://${window.location.hostname}:5002`;
+let socket = io(socketioHost);
 let macyInstance = null;
 
 function handlePostUpdate(res) {
@@ -116,6 +117,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if (ROUTER.CURRENT_PAGE['name'] === ROUTER.PAGE_NAMES.LIST) {
         macyInstance = Macy(MACY_SETTINGS);
         macyInstance.on(macyInstance.constants.EVENT_RECALCULATED, handleMacyRecalculated);
+        macyInstance.recalculate(true, true);
     }
     socket.on('post_update', handlePostUpdate);
     bindPostcardClick()

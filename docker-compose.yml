@@ -1,0 +1,27 @@
+version: "2.1"
+
+services:
+
+  thisisalsome:
+    image: "thalida/thisisalso.me:latest"
+    # network_mode: host
+    ports:
+      - "5001:5001"
+    environment:
+      - "TIAME_ADMIN=false"
+      - "TIAME_DB_HOST=host.docker.internal"
+      - "TIAME_DB_NAME=thisisalsome"
+      - "TIAME_DB_USER=thalida"
+    command: python public.py
+
+  admin_thisisalsome:
+    image: "thalida/thisisalso.me:latest"
+    # network_mode: host
+    ports:
+      - "5002:5002"
+    environment:
+      - "TIAME_ADMIN=true"
+      - "TIAME_DB_HOST=host.docker.internal"
+      - "TIAME_DB_NAME=thisisalsome"
+      - "TIAME_DB_USER=thalida"
+    command: python private.py

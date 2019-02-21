@@ -1,10 +1,11 @@
+import os
 import logging
 import datetime
 
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-from app import STATUS_CODES, VERSION_AFTER_MINUTES, DEFAULT_THEME, DEFAULT_STATUS
+from app import ENV_VARS, STATUS_CODES, VERSION_AFTER_MINUTES, DEFAULT_THEME, DEFAULT_STATUS
 
 logger = logging.getLogger(__name__)
 
@@ -13,9 +14,15 @@ class PostModels(object):
     def __init__(self, is_admin=False):
         super(PostModels, self).__init__()
         self.is_admin = is_admin
+        self.db = {
+            'host': os.getenv(ENV_VARS['DB']['HOST'], 'localhost'),
+            'dbname': os.getenv(ENV_VARS['DB']['NAME']),
+            'user': os.getenv(ENV_VARS['DB']['USER']),
+            'password': os.getenv(ENV_VARS['DB']['PASSWORD'], None),
+        }
 
     def execute(self, fetch_action, query, query_args):
-        with psycopg2.connect("dbname=thisisalsome user=thalida") as conn:
+        with psycopg2.connect(**self.db) as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
                 cur.execute(query, query_args)
                 fetch_fn = getattr(cur, fetch_action)

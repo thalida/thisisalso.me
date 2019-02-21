@@ -7,7 +7,7 @@ from pprint import pprint
 from flask import Blueprint, render_template, make_response, abort
 from bs4 import BeautifulSoup
 
-from app import AMDIN_ENV_KEY
+from app import ENV_VARS
 from app.models import postModels
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ shared_routes = Blueprint(
 )
 
 def get_is_admin():
-    is_admin = os.getenv(AMDIN_ENV_KEY, False) in [True, 'true']
+    is_admin = os.getenv(ENV_VARS['ENABLE_AMDIN_ACCESS'], False) in [True, 'true']
     return is_admin
 
 @shared_routes.route('/')

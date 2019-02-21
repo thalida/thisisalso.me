@@ -46,6 +46,7 @@ def view_edit(post_id=None):
 def handle_save(json_req):
     try:
         post = to_json(postModels.save(json_req))
+        print(post)
         emit('post_update', post, broadcast=True)
         return post
     except Exception:
@@ -63,5 +64,4 @@ def handle_save(json_req):
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    # app.run(debug=True, host='0.0.0.0', port='5002')
     socketio.run(app, debug=True, host='0.0.0.0', port='5002')
