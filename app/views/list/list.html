@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{% endblock %}
+
+{% block nav_links %}
+    {% if is_admin %}
+        <a class="nav__link" href="/new">write</a>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+<div class="posts" data-posts-container>
+    {% for post in posts %}
+        {% include "_partials/postcard.html" %}
+    {% endfor %}
+</div>
+{% endblock %}

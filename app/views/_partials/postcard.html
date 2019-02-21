@@ -1,0 +1,12 @@
+<div class="ql-container ql-snow ql-container--card"
+     href="/{{post['id']}}"
+     role="link"
+     data-postcard
+     data-post-id="{{post['id']}}"
+     data-theme="{{post['theme']}}"
+     data-status="{{post['status']}}"
+     tabindex="0">
+    <div class="ql-editor">
+        {{post['contents']|html_excerpt(300)|safe}}
+    </div>
+</div>
