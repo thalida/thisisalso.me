@@ -62,10 +62,15 @@ def html_excerpt(html, num_characters=100, append_string="…", from_api=False):
     excerpt_text = list(full_text[:num_characters])
     escapted_excerpt = list(map(re.escape, excerpt_text))
     re_pattern = '((?:<.*?>)?' + '(?:<.*?>)?'.join(escapted_excerpt) + '(?:<.*?>)?)'
-    m = re.search(re_pattern, html)
 
-    excerpt_soup = BeautifulSoup(m.group(1).strip(), 'html5lib')
-    last_el = excerpt_soup.find_all(string=re.compile('.+'))[-1].parent
-    last_el.contents[-1].replace_with(last_el.contents[-1] + append_string)
+    try:
+        m = re.search(re_pattern, html)
+        excerpt_soup = BeautifulSoup(m.group(1).strip(), 'html5lib')
+        last_el = excerpt_soup.find_all(string=re.compile('.+'))[-1].parent
+        last_el.contents[-1].replace_with(last_el.contents[-1] + append_string)
+    except Exception:
+        logger.exception('Error creating html excerpt')
+        excerpt_soup = soup
+
     excerpt_html = excerpt_soup.prettify()
     return excerpt_html
