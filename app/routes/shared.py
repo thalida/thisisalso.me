@@ -1,5 +1,6 @@
 import os
 import re
+import html
 
 import logging
 from pprint import pprint
@@ -52,19 +53,20 @@ def view_read(post_id):
 def not_found(error):
     return make_response('', 404)
 
-def html_excerpt(html, num_characters=100, append_string="…", from_api=False):
-    soup = BeautifulSoup(html, 'html5lib')
-    full_text = soup.get_text()
+def html_excerpt(raw_html, num_characters=100, append_string="…", from_api=False):
+    soup = BeautifulSoup(raw_html, 'html5lib')
+    raw_text = soup.text
 
-    if len(full_text) <= num_characters:
+    if len(raw_text) <= num_characters:
         return soup.prettify()
 
-    excerpt_text = list(full_text[:num_characters])
-    escapted_excerpt = list(map(re.escape, excerpt_text))
-    re_pattern = '((?:<.*?>)?' + '(?:<.*?>)?'.join(escapted_excerpt) + '(?:<.*?>)?)'
+    escaped_text = html.escape(raw_text)
+    excerpt_text = list(escaped_text[:num_characters])
+    re_escapted_excerpt = list(map(re.escape, excerpt_text))
+    re_pattern = '((?:<.*?>)?' + '(?:<.*?>)?'.join(re_escapted_excerpt) + '(?:<.*?>)?)'
 
     try:
-        m = re.search(re_pattern, html)
+        m = re.search(re_pattern, raw_html)
         excerpt_soup = BeautifulSoup(m.group(1).strip(), 'html5lib')
         last_el = excerpt_soup.find_all(string=re.compile('.+'))[-1].parent
         last_el.contents[-1].replace_with(last_el.contents[-1] + append_string)
